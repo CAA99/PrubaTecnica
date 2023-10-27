@@ -33,7 +33,7 @@ Para la instalacion y ejecucion del proyecto se deben serguir los siguientes pas
     # Crear entorno virtual
     python -m venv env
     # Activar entorno virtual linux
-    source /env/bin/activate
+    source env/bin/activate
     # Activar windows
     .\env\bin\activate
     
