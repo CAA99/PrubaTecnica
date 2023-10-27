@@ -26,6 +26,8 @@ Para la instalacion y ejecucion del proyecto se deben serguir los siguientes pas
     ```bash
     # Clonar el repositorio
     git clone https://github.com/CAA99/PrubaTecnica
+    # Movernos a la carpeta
+    cd PrubaTecnica
 
 2. **Crear un entonrno virtual y activarlo :**
     ```bash
