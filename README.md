@@ -45,7 +45,8 @@ Para la instalacion y ejecucion del proyecto se deben serguir los siguientes pas
 4. **Ejecutar Docker-Compose para la DB:** para ejecutar se debe estar en la raiz del proyecto
     ```bash
         # Ejecutar Docker-Compose
-        docker-compose up
+        docker-compose up --build
+
 5. **Populate DB:** se debe ejecutar el populate para agregar algunos datos a DB, este paso se debe ejecutar una vez este el docker corriendo
     ```bash
         # Populate DB
