@@ -34,7 +34,7 @@ Para la instalacion y ejecucion del proyecto se deben serguir los siguientes pas
     # Activar entorno virtual linux
     source env/bin/activate
     # Activar windows
-    .\env\bin\activate
+    .\env\Scripts\activate
     
 3. **Instalar requirements.txt:**
     ```bash
