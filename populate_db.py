@@ -5,8 +5,11 @@ from schemas.deleteSchema import isDeletedEvent
 from random import choice, randint
 from datetime import date
 from enum import Enum
+from models.eventsModel import Event
 
 session = Session()
+Event.metadata.create_all(session.bind)
+
 event_types = [value for value in CreateEvent.__annotations__["eventType"].__members__.values()]
 status_values = [value for value in CreateEvent.__annotations__["status"].__members__.values()]
 def createExamples():
