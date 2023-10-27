@@ -14,7 +14,7 @@
 Para ejecutar este proyecto, necesitas tener las siguientes herramientas y dependencias instaladas:
 
 - **Python**: 3.11
-- **pip** 
+- **pip** : 23.3.1
 - **Base de Datos**: PostgreSQL
 - **Git**: 
 - **Docker-Compose** :  v2.22.0
