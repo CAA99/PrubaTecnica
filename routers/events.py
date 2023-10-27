@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from schemas.events import Event
 from schemas.createEvent import CreateEvent, StatusEvent
@@ -7,9 +7,18 @@ from database import Session
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
-
+from jwt_manager import create_token
+from schemas.user import User
+from middlewares.jwt_barer import JWTBearer
 import pdb
 eventRouter = APIRouter()
+
+@eventRouter.post('/login', tags=['Autenticacion'])
+def login(user : User):
+    if user.email == "admin@mail.com" and user.password == 'admin':
+        token: str = create_token(user.__dict__)
+    return JSONResponse(status_code=200, content=token)
+
 
 @eventRouter.get('/events', tags=['Events'], response_model=list[Event])
 async def get_Events() -> list[Event]:
@@ -39,7 +48,7 @@ async def get_Event_By_Id(id : int) -> Event:
 #         return jsonable_encoder(events)
     
 
-@eventRouter.post('/events', tags=['Events'])
+@eventRouter.post('/events', tags=['Events'], dependencies=[Depends(JWTBearer())])
 async def create_Events(event: CreateEvent) -> None:
     try:
         db = Session()
@@ -48,7 +57,7 @@ async def create_Events(event: CreateEvent) -> None:
     except SQLAlchemyError as e:
         return JSONResponse(status_code=500, content={'error': f'{str(e)}'})
 
-@eventRouter.put('/events/{id}/', tags=['Events'])
+@eventRouter.put('/events/{id}/', tags=['Events'], dependencies=[Depends(JWTBearer())])
 async def update_Events(id : int, event: CreateEvent ) -> CreateEvent:
     db = Session()
     event = EventService(db).updateEvent(id, event)
@@ -56,7 +65,7 @@ async def update_Events(id : int, event: CreateEvent ) -> CreateEvent:
     return JSONResponse(status_code=201, content=jsonable_encoder(event) )
     
 
-@eventRouter.delete('/events/{id}/', tags=['Events'])
+@eventRouter.delete('/events/{id}/', tags=['Events'], dependencies=[Depends(JWTBearer())])
 async def soft_Destroy(id : int):
     db = Session()
     EventService(db).softDestroy(id)

@@ -17,7 +17,7 @@ Para ejecutar este proyecto, necesitas tener las siguientes herramientas y depen
 - **pip** 
 - **Base de Datos**: PostgreSQL
 - **Git**: 
-- **Docker-Compose** : 
+- **Docker-Compose** :  v2.22.0
 
 ## Instalación
 
@@ -55,6 +55,14 @@ Para la instalacion y ejecucion del proyecto se deben serguir los siguientes pas
     uvicorn main:app --reload --port 8000
     # Abrimos en el navegador
     http://127.0.0.1:8000
+    # Nos autenticamos con los siguientes datos para obtener el token
+    http://localhost:8000/docs#/Autenticacion/login_login_post
+      {
+    "email": "admin@mail.com",
+    "password": "admin"
+    }
+    # El Token generado lousaremos para autenticarnos en Authorize
+    Token : SeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQG1haWwuY29tIiwicGFzc3dvcmQiOiJhZG1pbiJ9.N7fxtyg3oChIAzfk4iOnkl98ErROWMXKqi5F3_e5vQc
 
 # Base de Datos
 El modelo de eventos es el siguiente 
@@ -105,6 +113,12 @@ En este proyecto, el backend se encarga de manejar ciertas condiciones específi
 Estas reglas aseguran que los eventos se gestionen correctamente en función de su tipo y estado. La lógica de manejo en el backend garantiza la coherencia de los datos y su correcta clasificación.
 
 ### Rutas de la API
+
+### /login
+
+- **POST `/events`**
+  - Valida datos y crea token necesario para realizar ciertas operaciones.
+  - Parámetros de solicitud: Datos del evento a crear "email": "string", "password": "string".
 
 #### `/events`
 
@@ -178,8 +192,12 @@ Estas reglas aseguran que los eventos se gestionen correctamente en función de 
 
 
 ### Ejemplos de Uso
-
-1. **Tipos de Evento**:
+1. **Autenticaion**:
+   - {
+    "email": "admin@mail.com",
+    "password": "admin"
+  }
+2. **Tipos de Evento**:
    - {
     "eventType": "Evento Tipo 2",
     "description": "Descripción del evento 1",

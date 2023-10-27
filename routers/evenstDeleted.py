@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from schemas.deleteEvents import DeleteEvent
 from schemas.events import Event
@@ -8,9 +8,10 @@ from database import Session
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
+from middlewares.jwt_barer import JWTBearer
 eventDeleted = APIRouter()
 
-@eventDeleted.get('/events/deleted', tags=['Events was deleted'])
+@eventDeleted.get('/events/deleted', tags=['Events was deleted'], dependencies=[Depends(JWTBearer())])
 async def get_Events() -> list[DeleteEvent]:
     try:
         db = Session()
@@ -20,7 +21,7 @@ async def get_Events() -> list[DeleteEvent]:
         return JSONResponse(status_code=500, content={'error': str(e)})
 
 
-@eventDeleted.put('/event/restore/{id}', tags=['Events was deleted'])
+@eventDeleted.put('/event/restore/{id}', tags=['Events was deleted'], dependencies=[Depends(JWTBearer())])
 async def restore_event(id : int) -> Event:
     try:
         db = Session()

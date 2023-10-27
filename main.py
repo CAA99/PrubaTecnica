@@ -4,7 +4,10 @@ from routers.events import eventRouter
 from routers.eventsManagement import eventManagementRouter
 from routers.evenstDeleted import eventDeleted
 from database import Base, engine 
+from middlewares.error_handler import ErrorHandler
+
 app = FastAPI()
+app.add_middleware(ErrorHandler)
 app.include_router(eventRouter)
 app.include_router(eventManagementRouter)
 app.include_router(eventDeleted)
