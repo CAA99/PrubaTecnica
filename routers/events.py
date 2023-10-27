@@ -1,11 +1,14 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from schemas.events import Event
-from schemas.createEvent import CreateEvent
+from schemas.createEvent import CreateEvent, StatusEvent
 from services.eventService import EventService 
 from database import Session
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException
+
+import pdb
 eventRouter = APIRouter()
 
 @eventRouter.get('/events', tags=['Events'], response_model=list[Event])
@@ -19,9 +22,22 @@ async def get_Events() -> list[Event]:
 
 @eventRouter.get('/events/{id}/', tags=['Events'])
 async def get_Event_By_Id(id : int) -> Event:
-    db = Session()
-    event = EventService(db).getEvent_id(id)
-    return jsonable_encoder(event)
+    try:
+        db = Session()
+        event = EventService(db).getEvent_id(id)
+        return jsonable_encoder(event)
+    except HTTPException as e:
+        if e.status_code == 404:
+            return JSONResponse(status_code=404, content={'error': f'{e.detail}'})
+        else:
+            return JSONResponse(status_code=500, content={'error': f'{e.detail}'})
+        
+# @eventRouter.get('/Events/{status}', tags=['Events'])
+# def get_By_Status(status: StatusEvent) -> list[Event]: 
+#         db = Session()
+#         events = EventService(db).getEventsByStatus(status)
+#         return jsonable_encoder(events)
+    
 
 @eventRouter.post('/events', tags=['Events'])
 async def create_Events(event: CreateEvent) -> None:

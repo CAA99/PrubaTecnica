@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-from datetime import date, datetime
+from pydantic import BaseModel, validator
 from typing import Optional
+from datetime import date, datetime
 from enum import Enum
 
 class StatusEvent(str, Enum):
@@ -12,13 +12,11 @@ class eventType(str, Enum):
     TypeEvent_2 = "Evento Tipo 2"
     TypeEvent_3 = "Evento Tipo 3"
 
-class Event(BaseModel):
+class DeleteEvent(BaseModel):
     id : int
-    eventType : eventType 
+    eventType : eventType
     description : str
     date : date
     status : StatusEvent
-    requireManagement : Optional[bool] = None  
-
-    class Config:
-        use_enum_values = True
+    requireManagement : Optional[bool] = None 
+    isDeleted: bool

@@ -19,11 +19,11 @@ class EventService():
             raise HTTPException(status_code=500, detail=f"Error {str(e)}")
         
     def getEvent_id(self, id: int):
-        try:
-            event = self.db.query(Event).filter(Event.id == id).first()
-            return event
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error {str(e)}")
+        event = self.db.query(Event).filter(Event.id == id).first()
+        if event is None or event.isDeleted == True:
+            raise HTTPException(status_code=404, detail="Evento no encontrado")
+        return event
+    
         
     def updateEvent(self, id: int, event: CreateEvent):
         try:
@@ -37,6 +37,14 @@ class EventService():
             _event.date = event.date
             _event.status = event.status
             _event.requireManagement = event.requireManagement
+            
+            if _event.eventType != event.eventType:
+                if event.eventType == CreateEvent.eventType.TypeEvent_2:
+                    event.requireManagement = None
+                if event.eventType == CreateEvent.eventType.TypeEvent_1 and event.status == CreateEvent.StatusEvent.Pendiente:
+                    event.requireManagement = None
+                if event.eventType == CreateEvent.eventType.TypeEvent_3 and event.status == CreateEvent.StatusEvent.Pendiente:
+                    event.requireManagement = None
 
             self.db.commit()
             updated_event = {
@@ -58,3 +66,5 @@ class EventService():
             return 
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error {str(e)}")
+        
+    
